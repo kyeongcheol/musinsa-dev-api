@@ -1,10 +1,11 @@
 package com.musinsa.product.category.service.impl;
 
 import com.musinsa.product.category.dao.ProductCategoryRepository;
-import com.musinsa.product.category.dto.AddProductCategoryRequest;
-import com.musinsa.product.category.dto.AddProductCategoryResponse;
+import com.musinsa.product.category.dto.AddProductCategoryReq;
+import com.musinsa.product.category.dto.AddProductCategoryRes;
 import com.musinsa.product.category.dto.AllProductCategoryListRes;
 import com.musinsa.product.category.dto.OneProductCategoryListRes;
+import com.musinsa.product.category.dto.UpdateProductCategoryRes;
 import com.musinsa.product.category.entity.ProductCategory;
 import com.musinsa.product.category.exception.AlreadyExistException;
 import com.musinsa.product.category.exception.NotFoundException;
@@ -68,20 +69,28 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
 	}
 	
 	@Transactional
-	public AddProductCategoryResponse addProdcutCategory(AddProductCategoryRequest request) throws Exception{
+	public AddProductCategoryRes addProdcutCategory(AddProductCategoryReq request) throws Exception{
 		
         categoryExistsByName(request.getName());
         if (request.getRootId() == null) { //상위 카테고리 등록
             ProductCategory saved = productCategoryRepository.save(new ProductCategory(request.getName()));
-            return AddProductCategoryResponse.from(saved);
+            return AddProductCategoryRes.from(saved);
         }
         //하위 카테고리 등록
         ProductCategory rootProductCategory = productCategoryRepository.findById(request.getRootId()).orElseThrow();
         ProductCategory saved = productCategoryRepository.save((new ProductCategory(request.getName(), rootProductCategory)));
         
-		return AddProductCategoryResponse.from(saved);
+		return AddProductCategoryRes.from(saved);
 	}
 	
+    @Transactional
+    public UpdateProductCategoryRes updateProdcutCategory(Long id, String name) {
+        categoryExistsById(id);
+        ProductCategory findCategory = productCategoryRepository.findById(id).orElseThrow();
+        findCategory.editName(name);
+        return UpdateProductCategoryRes.from(findCategory);
+    }
+    
     private void categroiesExists(List<ProductCategory> categoryList) {
         if(categoryList.isEmpty()){
             throw new NotFoundException();

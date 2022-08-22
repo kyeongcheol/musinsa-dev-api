@@ -14,11 +14,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import io.swagger.annotations.ApiModelProperty;
 
+/**
+ * @author kcyang
+ * @apiNote 상품 카테고리 Entity
+ */
 @Getter
 @Entity
 @Table(name="product_category")
@@ -26,9 +28,11 @@ public class ProductCategory {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@ApiModelProperty(example = "ID")
 	private Long id;
 
 	@Column(length = 64, nullable = false)
+	@ApiModelProperty(example = "이름")
 	private String name;
 	
 	public ProductCategory(String name, ProductCategory rootCategory) {
@@ -49,4 +53,8 @@ public class ProductCategory {
 
 	@OneToMany(mappedBy = "rootCategory", cascade = CascadeType.REMOVE)
 	private List<ProductCategory> subCategory = new ArrayList<>();
+	
+	public void editName(String name) {
+        this.name = name;
+    }
 }
