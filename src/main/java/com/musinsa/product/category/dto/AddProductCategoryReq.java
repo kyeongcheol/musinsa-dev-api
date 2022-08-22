@@ -5,8 +5,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import io.swagger.annotations.ApiModelProperty;
 
+/**
+ * @author kcyang
+ * @apiNote 상품 카테고리 등록 DTO
+ * @version 1.0
+ */
 @Getter
-public class AddProductCategoryRequest {
+@NoArgsConstructor
+@AllArgsConstructor
+public class AddProductCategoryReq {
 	
 	@ApiModelProperty(example = "이름")
     private String name;
