@@ -10,17 +10,17 @@ import com.musinsa.product.category.dto.UpdateProductCategoryRes;
 import com.musinsa.product.category.entity.ProductCategory;
 import com.musinsa.product.category.exception.AlreadyExistException;
 import com.musinsa.product.category.exception.NotFoundException;
-import com.musinsa.product.category.exception.ErrorMessage;
 import com.musinsa.product.category.service.ProductCategoryService;
 
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,28 +42,33 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
 	/**
 	 * @apiNote 상품 전체 카테고리 전체 조회 서비스
 	 */
+	
+	@Cacheable("ProductCategory")
 	@Transactional(readOnly = true)
 	public AllProductCategoryListRes findAllProductCategoryList() throws Exception{
 		
-		 List<ProductCategory> allCategoryList = productCategoryRepository.findAll();
-		 categroiesExists(allCategoryList);
-		 
-		 List<OneProductCategoryListRes> categoryList = allCategoryList.stream()
-				 .map(category -> new OneProductCategoryListRes(category.getId(), category.getName()))
-                .collect(Collectors.toList());
-		 
-        return new AllProductCategoryListRes(categoryList);
+		List<ProductCategory> allCategoryList = productCategoryRepository.findAll();	// 상품 카테고리 전체 조회
+		productCategoryExists(allCategoryList);		// 상품 카테고리 존재 여부 확인
+		
+		// 상품 카테고리 조회
+		List<OneProductCategoryListRes> categoryList = allCategoryList.stream()
+				.map(category -> new OneProductCategoryListRes(category.getId(), category.getName()))
+				.collect(Collectors.toList());
+ 
+		return new AllProductCategoryListRes(categoryList);
 	}
 	
 	/**
 	 * @apiNote 상품 특정 카테고리 조회 서비스
 	 */
+	
+	@Cacheable("ProductCategory")
 	@Transactional(readOnly = true)
 	public AllProductCategoryListRes findOneProductCategoryList(Long id) throws Exception{
 		
-		categoryExistsById(id);
+		productCategoryExistsById(id);
         List<ProductCategory> oneCategoryList = productCategoryRepository.findByRootCategoryId(id);
-        categroiesExists(oneCategoryList);
+        productCategoryExists(oneCategoryList);
         
         List<OneProductCategoryListRes> categoryList = oneCategoryList.stream()
                 .map(category -> new OneProductCategoryListRes(category.getId(), category.getName()))
@@ -75,6 +80,8 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
 	/**
 	 * @apiNote 상품 카테고리 등록 서비스
 	 */
+	
+	@CacheEvict(value = "ProductCategory", allEntries = true)
 	@Transactional
 	public AddProductCategoryRes addProdcutCategory(AddProductCategoryReq request) throws Exception{
 		
@@ -93,9 +100,11 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
 	/**
 	 * @apiNote 상품 카테고리 수정 서비스
 	 */
+	
+	@CacheEvict(value = "ProductCategory", allEntries = true)
     @Transactional
     public UpdateProductCategoryRes updateProdcutCategory(Long id, String name) {
-        categoryExistsById(id);
+    	productCategoryExistsById(id);
         ProductCategory updateCategory = productCategoryRepository.findById(id).orElseThrow();
         updateCategory.updateName(name);
         return UpdateProductCategoryRes.from(updateCategory);
@@ -104,27 +113,41 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
     /**
      * @apiNote 상품 카테고리 삭제 서비스
      */
+	
+	@CacheEvict(value = "ProductCategory", allEntries = true)
     @Transactional
     public DeleteProductCategoryRes deleteProductCategory(Long id) {
-        categoryExistsById(id);
+    	productCategoryExistsById(id);
         ProductCategory foundCategory = productCategoryRepository.findById(id).orElseThrow();
         productCategoryRepository.delete(foundCategory);
         return DeleteProductCategoryRes.from(foundCategory);
     }
     
-    private void categroiesExists(List<ProductCategory> categoryList) {
+    /**
+     * @apiNote 상품 카테고리 존재 여부 확인
+     * @param categoryList
+     */
+    private void productCategoryExists(List<ProductCategory> categoryList) {
         if(categoryList.isEmpty()){
             throw new NotFoundException();
         }
     }
-
-    private void categoryExistsById(Long id) {
+    
+    /**
+     * @apiNote 상품 카테고리 존재 여부 확인 (By Id)
+     * @param id
+     */
+    private void productCategoryExistsById(Long id) {
         Optional<ProductCategory> findCategory = productCategoryRepository.findById(id);
         if(!findCategory.isPresent()) {
             throw new NotFoundException();
         }
     }
-
+    
+    /**
+     * @apiNote 상품 카테고리 존재 여부 확인 (By Name)
+     * @param name
+     */
     private void categoryExistsByName(String name) {
         Optional<ProductCategory> findCategory = productCategoryRepository.findByName(name);
         if (findCategory.isPresent()) {
