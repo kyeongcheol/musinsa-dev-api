@@ -83,7 +83,7 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
 	
 	@CacheEvict(value = "ProductCategory", allEntries = true)
 	@Transactional
-	public AddProductCategoryRes addProdcutCategory(AddProductCategoryReq request) throws Exception{
+	public AddProductCategoryRes addProductCategory(AddProductCategoryReq request) throws Exception{
 		
         categoryExistsByName(request.getName());
         if (request.getRootId() == null) { //상위 카테고리 등록
@@ -103,7 +103,7 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
 	
 	@CacheEvict(value = "ProductCategory", allEntries = true)
     @Transactional
-    public UpdateProductCategoryRes updateProdcutCategory(Long id, String name) {
+    public UpdateProductCategoryRes updateProductCategory(Long id, String name) {
     	productCategoryExistsById(id);
         ProductCategory updateCategory = productCategoryRepository.findById(id).orElseThrow();
         updateCategory.updateName(name);

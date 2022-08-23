@@ -19,7 +19,7 @@ public interface ProductCategoryService {
 
 	AllProductCategoryListRes findAllProductCategoryList() throws Exception;
 	AllProductCategoryListRes findOneProductCategoryList(Long id) throws Exception;
-	AddProductCategoryRes addProdcutCategory(AddProductCategoryReq request) throws Exception;
-	UpdateProductCategoryRes updateProdcutCategory(Long id, String name);
+	AddProductCategoryRes addProductCategory(AddProductCategoryReq request) throws Exception;
+	UpdateProductCategoryRes updateProductCategory(Long id, String name);
 	DeleteProductCategoryRes deleteProductCategory(Long id);
 }

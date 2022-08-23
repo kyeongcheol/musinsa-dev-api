@@ -11,9 +11,9 @@ import java.util.List;
 @Getter
 public class AllProductCategoryListRes<T> {
 
-	private List<T> categoryResponse;
+	private List<T> allProductCategoryRes;
 
 	public AllProductCategoryListRes(List<T> categoryList) {
-        this.categoryResponse = categoryList;
+        this.allProductCategoryRes = categoryList;
     }
 }

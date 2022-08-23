@@ -23,7 +23,7 @@ import org.springframework.http.HttpStatus;
  * @version 1.0
  */
 
-@RequestMapping("/api/musinsa/category")
+@RequestMapping(value = "/api/product/category")
 @RequiredArgsConstructor
 @RestController
 public class ProductCategoryController {
@@ -61,7 +61,7 @@ public class ProductCategoryController {
 	@RequestMapping(value = "", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<?> addProductCategory(@RequestBody AddProductCategoryReq request) throws Exception {
-		return ResponseEntity.ok(categoryService.addProdcutCategory(request));
+		return ResponseEntity.ok(categoryService.addProductCategory(request));
 	}
 	
 	/**
@@ -73,7 +73,7 @@ public class ProductCategoryController {
 	 */
 	@RequestMapping(value = "/{id}", method = RequestMethod.PATCH, produces = "application/json;charset=UTF-8")
 	public ResponseEntity<?> updateProductCategory(@PathVariable Long id, @RequestParam(name = "name") String name) throws Exception{
-		return ResponseEntity.ok(categoryService.updateProdcutCategory(id, name));
+		return ResponseEntity.ok(categoryService.updateProductCategory(id, name));
 	}
 	
 	/**
