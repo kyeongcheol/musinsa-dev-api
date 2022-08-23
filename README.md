@@ -28,13 +28,9 @@
 	
   // JDK 설치 확인
   yum list installed | grep openjdk
-  
-  
-  git clone https://github.com/who-hoo/musinsa-test.git
   ```
 
 - git
-
 
   ```bash
   
@@ -71,437 +67,196 @@
   java -jar musinsa-dev-api-0.0.1-SNAPSHOT.jar
   ```
 
-### docker 사용
-
-- install
-  ```bash
-  // 도커 설치(되어있다면 생략 가능)
-  curl -fsSL https://get.docker.com/ | sudo sh
-  docker pull zjunghoo/musinsa-test
-  ```
-- execute
-  ```bash
-  docker images // image id 확인
-  docker run -it -d -p 8080:8080 [doker images로 확인한 image id]
-  ```
-
 ## 2. API Doc
 
 | 기능               | API                                             | 비고                                                       |
 | ------------------ | ----------------------------------------------- | ---------------------------------------------------------- |
-| 카테고리 등록      | POST /api/product/category                                |                                                            |
-| 카테고리 수정      | PATCH /api/product/category/{id}                          |                                                            |
-| 카테고리 삭제      | DELETE /api/product/category/{id} 			|  |
-| 전체 카테고리 조회 | GET /api/product/category                                 |                                                            |
-| 특정 카테고리 조회 | GET /api/product/category/{id}                            | 해당 상품 카테고리의 하위 상품 카테고리 전체 조회 가능             |
+| 상품 카테고리 등록      | POST /api/product/category                                |                                                            |
+| 상품 카테고리 수정      | PATCH /api/product/category/{id}                          |                                                            |
+| 상품 카테고리 삭제      | DELETE /api/product/category/{id} 			|  |
+| 전체 상품 카테고리 조회 | GET /api/product/category                                 |                                                            |
+| 특정 상품 카테고리 조회 | GET /api/product/category/{id}                            | 해당 상품 카테고리의 하위 상품 카테고리 전체 조회 가능             |
 
-## 3. API 요청 및 응답 예시(JSON)
 
-### 카테고리 등록
+### 상품 카테고리 등록
 
-- POST http://localhost:8080/api/categories
+- Method : POST
+- URL : http://localhost:8080/api/product/category
 - request body
+- 
   ```json
   {
-    "kor_name": "반려동물 장난감",
-    "parent_category_id": 191
+    "name": "testCategory",
+    "rootId": 1
   }
   ```
-- response
-  ```json
-  {
-    "category_id": 192,
-    "category_name": "반려동물 장난감",
-    "category_english_name": null,
-    "parent_category_id": 191,
-    "sub_categories": []
-  }
-  ```
+- response body
 
-### 카테고리 수정
-
-- PATCH http://localhost:8080/api/categories/188
-- request body
   ```json
   {
-    "kor_name": "티셔츠",
-    "eng_name": null,
-    "parent_category_id": 2,
-    "sub_category_id_list": [23, 25]
-  }
-  ```
-- response
-  ```json
-  {
-    "category_id": 188,
-    "category_name": "티셔츠",
-    "category_english_name": null,
-    "parent_category_id": 2,
-    "sub_categories": [
-      {
-        "category_id": 23,
-        "category_name": "반소매 티셔츠",
-        "category_english_name": null,
-        "parent_category_id": 188,
-        "sub_categories": []
-      },
-      {
-        "category_id": 25,
-        "category_name": "긴소매 티셔츠",
-        "category_english_name": null,
-        "parent_category_id": 188,
-        "sub_categories": []
-      }
+    "allProductCategoryRes": [
+       {
+        "id": 105,
+        "name": "testCategory"
+       }
     ]
   }
   ```
+![image](https://user-images.githubusercontent.com/29423360/186091076-fd5756c5-1e07-466d-b193-b45cf10819a6.png)
 
-### 카테고리 삭제
+![image](https://user-images.githubusercontent.com/29423360/186091135-efca81f6-16bb-4594-b635-1e1b6a6920f8.png)
 
-- DELETE http://localhost:8080/api/categories/1?withSubCategories=false : 상위 카테고리만 삭제(하위 카테고리는 루트 카테고리로 변경)
-- DELETE http://localhost:8080/api/categories/2?withSubCategories=true : 하위 카테고리 함께 삭제
 
-### 카테고리 조회
+### 상품 카테고리 수정
 
-- GET http://localhost:8080/api/categories/1
-- response
+- Method : PATCH
+- URL : http://localhost:8080/api/product/category/{id}
+- request body
+
   ```json
   {
-    "categories": [
+    "id": 105,
+    "name": "testCategory1"
+  }
+  ```
+  
+- response body
+  ```json
+  {
+    "id": 105,
+    "name": "testCategory1"
+  }
+  ```
+
+![image](https://user-images.githubusercontent.com/29423360/186091320-7b94ff22-9bff-490c-a26a-c4b2dcd9dcd0.png)
+
+![image](https://user-images.githubusercontent.com/29423360/186091389-99469f49-bb8d-4ce8-886a-4018202096e8.png)
+
+
+### 상품 카테고리 삭제
+
+- Method : DELETE
+- URL : http://localhost:8080/api/product/category/{id}
+- request body
+
+  ```json
+  {
+    "id": 105
+  }
+  ```
+  
+- response body
+  ```json
+  {
+    "id": 105
+  }
+  ```
+  
+  ![image](https://user-images.githubusercontent.com/29423360/186090885-16598c71-f930-48f1-b4e0-38a9db01b211.png)
+
+
+### 전체 상품 카테고리 조회
+
+- Method : GET
+- URL : http://localhost:8080/api/product/category
+- response body
+
+  ```json
+  {
+    "allProductCategoryRes": [
       {
-        "category_id": 1,
-        "category_name": "상의",
-        "category_english_name": "Top",
-        "parent_category_id": null,
-        "sub_categories": [
-          {
-            "category_id": 24,
-            "category_name": "피케/카라 티셔츠",
-            "category_english_name": null,
-            "parent_category_id": 1,
-            "sub_categories": []
-          },
-          {
-            "category_id": 26,
-            "category_name": "맨투맨/스웨트셔츠",
-            "category_english_name": null,
-            "parent_category_id": 1,
-            "sub_categories": []
-          },
-          {
-            "category_id": 27,
-            "category_name": "민소매 티셔츠",
-            "category_english_name": null,
-            "parent_category_id": 1,
-            "sub_categories": []
-          },
-          {
-            "category_id": 28,
-            "category_name": "후드 티셔츠",
-            "category_english_name": null,
-            "parent_category_id": 1,
-            "sub_categories": []
-          },
-          {
-            "category_id": 29,
-            "category_name": "셔츠/블라우스",
-            "category_english_name": null,
-            "parent_category_id": 1,
-            "sub_categories": []
-          },
-          {
-            "category_id": 30,
-            "category_name": "니트/스웨터",
-            "category_english_name": null,
-            "parent_category_id": 1,
-            "sub_categories": []
-          },
-          {
-            "category_id": 31,
-            "category_name": "기타 상의",
-            "category_english_name": null,
-            "parent_category_id": 1,
-            "sub_categories": []
-          }
-        ]
+        "id": 1,
+        "name": "상의"
       },
       {
-        "category_id": 2,
-        "category_name": "아우터",
-        "category_english_name": "Outer",
-        "parent_category_id": null,
-        "sub_categories": [
-          {
-            "category_id": 32,
-            "category_name": "후드 집업",
-            "category_english_name": null,
-            "parent_category_id": 2,
-            "sub_categories": []
-          },
-          {
-            "category_id": 33,
-            "category_name": "블루종/MA-1",
-            "category_english_name": null,
-            "parent_category_id": 2,
-            "sub_categories": []
-          },
-          {
-            "category_id": 34,
-            "category_name": "레더/라이더스 재킷",
-            "category_english_name": null,
-            "parent_category_id": 2,
-            "sub_categories": []
-          },
-          {
-            "category_id": 35,
-            "category_name": "무스탕/퍼",
-            "category_english_name": null,
-            "parent_category_id": 2,
-            "sub_categories": []
-          },
-          {
-            "category_id": 36,
-            "category_name": "트러커 재킷",
-            "category_english_name": null,
-            "parent_category_id": 2,
-            "sub_categories": []
-          },
-          {
-            "category_id": 37,
-            "category_name": "슈트/블레이저 재킷",
-            "category_english_name": null,
-            "parent_category_id": 2,
-            "sub_categories": []
-          },
-          {
-            "category_id": 38,
-            "category_name": "카디건",
-            "category_english_name": null,
-            "parent_category_id": 2,
-            "sub_categories": []
-          },
-          {
-            "category_id": 39,
-            "category_name": "아노락 재킷",
-            "category_english_name": null,
-            "parent_category_id": 2,
-            "sub_categories": []
-          },
-          {
-            "category_id": 40,
-            "category_name": "플리스/뽀글이",
-            "category_english_name": null,
-            "parent_category_id": 2,
-            "sub_categories": []
-          },
-          {
-            "category_id": 41,
-            "category_name": "트레이닝 재킷",
-            "category_english_name": null,
-            "parent_category_id": 2,
-            "sub_categories": []
-          },
-          {
-            "category_id": 42,
-            "category_name": "스타디움 재킷",
-            "category_english_name": null,
-            "parent_category_id": 2,
-            "sub_categories": []
-          },
-          {
-            "category_id": 43,
-            "category_name": "환절기 코트",
-            "category_english_name": null,
-            "parent_category_id": 2,
-            "sub_categories": []
-          },
-          {
-            "category_id": 44,
-            "category_name": "겨울 싱글 코트",
-            "category_english_name": null,
-            "parent_category_id": 2,
-            "sub_categories": []
-          },
-          {
-            "category_id": 45,
-            "category_name": "겨울 더블 코트",
-            "category_english_name": null,
-            "parent_category_id": 2,
-            "sub_categories": []
-          },
-          {
-            "category_id": 46,
-            "category_name": "겨울 기타 코트",
-            "category_english_name": null,
-            "parent_category_id": 2,
-            "sub_categories": []
-          },
-          {
-            "category_id": 47,
-            "category_name": "롱패딩/롱헤비 아우터",
-            "category_english_name": null,
-            "parent_category_id": 2,
-            "sub_categories": []
-          },
-          {
-            "category_id": 48,
-            "category_name": "숏패딩/숏헤비 아우터",
-            "category_english_name": null,
-            "parent_category_id": 2,
-            "sub_categories": []
-          },
-          {
-            "category_id": 49,
-            "category_name": "패딩 베스트",
-            "category_english_name": null,
-            "parent_category_id": 2,
-            "sub_categories": []
-          },
-          {
-            "category_id": 50,
-            "category_name": "베스트",
-            "category_english_name": null,
-            "parent_category_id": 2,
-            "sub_categories": []
-          },
-          {
-            "category_id": 51,
-            "category_name": "사파리/헌팅 재킷",
-            "category_english_name": null,
-            "parent_category_id": 2,
-            "sub_categories": []
-          },
-          {
-            "category_id": 52,
-            "category_name": "나일론/코치 재킷",
-            "category_english_name": null,
-            "parent_category_id": 2,
-            "sub_categories": []
-          },
-          {
-            "category_id": 53,
-            "category_name": "기타 아우터",
-            "category_english_name": null,
-            "parent_category_id": 2,
-            "sub_categories": []
-          },
-          {
-            "category_id": 188,
-            "category_name": "티셔츠",
-            "category_english_name": null,
-            "parent_category_id": 2,
-            "sub_categories": [
-              {
-                "category_id": 23,
-                "category_name": "반소매 티셔츠",
-                "category_english_name": null,
-                "parent_category_id": 188,
-                "sub_categories": []
-              },
-              {
-                "category_id": 25,
-                "category_name": "긴소매 티셔츠",
-                "category_english_name": null,
-                "parent_category_id": 188,
-                "sub_categories": []
-              }
-            ]
-          }
-        ]
+        "id": 2,
+        "name": "아우터"
+      },
+     ...
+    
+      {
+        "id": 101,
+        "name": "스포츠가방"
       },
       {
-        "category_id": 3,
-        "category_name": "바지",
-        "category_english_name": "Pants",
-        "parent_category_id": null,
-        "sub_categories": [
-          {
-            "category_id": 54,
-            "category_name": "데님 팬츠",
-            "category_english_name": null,
-            "parent_category_id": 3,
-            "sub_categories": []
-          },
-          {
-            "category_id": 55,
-            "category_name": "코튼 팬츠",
-            "category_english_name": null,
-            "parent_category_id": 3,
-            "sub_categories": []
-          },
-          {
-            "category_id": 56,
-            "category_name": "슈트 팬츠/슬랙스",
-            "category_english_name": null,
-            "parent_category_id": 3,
-            "sub_categories": []
-          },
-          {
-            "category_id": 57,
-            "category_name": "트레이닝/조거 팬츠",
-            "category_english_name": null,
-            "parent_category_id": 3,
-            "sub_categories": []
-          },
-          {
-            "category_id": 58,
-            "category_name": "숏 팬츠",
-            "category_english_name": null,
-            "parent_category_id": 3,
-            "sub_categories": []
-          },
-          {
-            "category_id": 59,
-            "category_name": "레깅스",
-            "category_english_name": null,
-            "parent_category_id": 3,
-            "sub_categories": []
-          },
-          {
-            "category_id": 60,
-            "category_name": "점프 슈트/오버올",
-            "category_english_name": null,
-            "parent_category_id": 3,
-            "sub_categories": []
-          },
-          {
-            "category_id": 61,
-            "category_name": "기타 바지",
-            "category_english_name": null,
-            "parent_category_id": 3,
-            "sub_categories": []
-          }
-        ]
+        "id": 102,
+        "name": "스포츠잡화"
       },
       {
-        "category_id": 4,
-        "category_name": "원피스",
-        "category_english_name": "Onepiece",
-        "parent_category_id": null,
-        "sub_categories": [
-          {
-            "category_id": 62,
-            "category_name": "미니 원피스",
-            "category_english_name": null,
-            "parent_category_id": 4,
-            "sub_categories": []
-          },
-          {
-            "category_id": 63,
-            "category_name": "미디 원피스",
-            "category_english_name": null,
-            "parent_category_id": 4,
-            "sub_categories": []
-          },
-          {
-            "category_id": 64,
-            "category_name": "맥시 원피스",
-            "category_english_name": null,
-            "parent_category_id": 4,
-            "sub_categories": []
-          }
-        ]
+        "id": 103,
+        "name": "스포츠모자"
+      },
+      {
+        "id": 104,
+        "name": "캠핑용품"
       }
     ]
   }
+
   ```
+
+![image](https://user-images.githubusercontent.com/29423360/186091610-b6df53b1-d5e6-43b4-9fe1-9c440e5f4ce1.png)
+
+![image](https://user-images.githubusercontent.com/29423360/186091820-9f1f3101-9b5d-42ad-b187-9c44437b7df4.png)
+
+
+### 특정 상품 카테고리 조회
+
+- Method : GET
+- URL : http://localhost:8080/api/product/category/{id}
+- request body
+
+ ```json
+  {
+    "id": 1  
+  }
+  ```
+
+- response body
+
+  ```json
+  {
+    "allProductCategoryRes": [
+    {
+      "id": 11,
+      "name": "반소매 티셔츠"
+    },
+    {
+      "id": 12,
+      "name": "피케/카라 티셔츠"
+    },
+    ...
+    ]
+  }  
+  ```
+  
+![image](https://user-images.githubusercontent.com/29423360/186091906-e1438e41-9f84-4881-8187-5dbd7145ca07.png)
+
+![image](https://user-images.githubusercontent.com/29423360/186091943-e1dc9af5-30fa-4fd1-8029-c887c4d275a3.png)
+
+
+## 4. 테스트 방법
+
+### Junit Test
+- Controller Test : src/test/java/com/musinsa/product/category/controller/test/ProductCategoryControllerTest.java
+  - ProductCategoryControllerTest 선택 > 오른쪽 마우스 클릭 > Junit Test
+- 테스트 결과 : Junit Console 에서 
+  
+### Gradle Test
+- Controller Test : src/test/java/com/musinsa/product/category/controller/test/ProductCategoryControllerTest.java
+  - ProductCategoryControllerTest 선택 > 오른쪽 마우스 클릭 > Gradle Test
+- 단위 및 통합 테스트 진행
+- 테스트 결과 : musinsa-dev-api\build\reports\tests\test\index.html
+  - index.html 을 실행하면 Gradle Test 결과를 UI로 확인 가능
+
+### Swagger-UI
+- http://localhost:8080/swagger-ui/index.html 접속 후 API 단위 테스트 진행
+
+## 5. 참고 URL
+- H2 Console : http://localhost:8080/h2-console
+
+![image](https://user-images.githubusercontent.com/29423360/186088528-d2c37371-f066-407f-90f4-484d5e0f852f.png)
+
+- Swagger UI : http://localhost:8080/swagger-ui/index.html
+
+![image](https://user-images.githubusercontent.com/29423360/186088469-2e14bc6a-efea-4773-af90-6e696c103a1d.png)
