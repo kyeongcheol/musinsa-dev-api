@@ -50,7 +50,7 @@
   // Git Clone 받은 경로에서 진행
   cd /root/musinsa-dev-api
   chmod +x gradlew
-  ./gradlew build
+  ./gradlew build --exclude-task test
   
   // Build 파일 경로 이동
   cd build/libs
