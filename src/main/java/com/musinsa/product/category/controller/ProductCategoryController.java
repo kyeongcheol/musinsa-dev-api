@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.musinsa.product.category.dto.AddProductCategoryReq;
+import com.musinsa.product.category.dto.AddProductCategoryRes;
 import com.musinsa.product.category.service.ProductCategoryService;
 
 import org.springframework.http.HttpStatus;
@@ -60,8 +61,8 @@ public class ProductCategoryController {
 	 */
 	@RequestMapping(value = "", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<?> addProductCategory(@RequestBody AddProductCategoryReq request) throws Exception {
-		return ResponseEntity.ok(categoryService.addProductCategory(request));
+	public AddProductCategoryRes addProductCategory(@RequestBody AddProductCategoryReq request) throws Exception {
+		return categoryService.addProductCategory(request);
 	}
 	
 	/**
