@@ -15,7 +15,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import lombok.Getter;
-import io.swagger.annotations.ApiModelProperty;
 
 /**
  * @author kcyang
@@ -28,11 +27,9 @@ public class ProductCategory {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@ApiModelProperty(example = "ID")
 	private Long id;
 
 	@Column(length = 64, nullable = false)
-	@ApiModelProperty(example = "이름")
 	private String name;
 	
 	public ProductCategory(String name, ProductCategory rootCategory) {
