@@ -1,7 +1,6 @@
 package com.musinsa.product.category.controller;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +23,6 @@ import org.springframework.http.HttpStatus;
  * @version 1.0
  */
 
-@Slf4j
 @RequestMapping("/api/musinsa/category")
 @RequiredArgsConstructor
 @RestController
@@ -76,6 +74,17 @@ public class ProductCategoryController {
 	@RequestMapping(value = "/{id}", method = RequestMethod.PATCH, produces = "application/json;charset=UTF-8")
 	public ResponseEntity<?> updateProductCategory(@PathVariable Long id, @RequestParam(name = "name") String name) throws Exception{
 		return ResponseEntity.ok(categoryService.updateProdcutCategory(id, name));
+	}
+	
+	/**
+	 * @apiNote 상품 카테고리 삭제 API
+	 * @param id
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = "application/json;charset=UTF-8")
+	public ResponseEntity<?> deleteProductCategory(@PathVariable Long id) throws Exception{
+		return ResponseEntity.ok(categoryService.deleteProductCategory(id));
 	}
 
 }

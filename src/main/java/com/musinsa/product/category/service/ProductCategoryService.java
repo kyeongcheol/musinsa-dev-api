@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import com.musinsa.product.category.dto.AddProductCategoryReq;
 import com.musinsa.product.category.dto.AddProductCategoryRes;
 import com.musinsa.product.category.dto.AllProductCategoryListRes;
+import com.musinsa.product.category.dto.DeleteProductCategoryRes;
 import com.musinsa.product.category.dto.UpdateProductCategoryRes;
 
 /**
@@ -20,4 +21,5 @@ public interface ProductCategoryService {
 	AllProductCategoryListRes findOneProductCategoryList(Long id) throws Exception;
 	AddProductCategoryRes addProdcutCategory(AddProductCategoryReq request) throws Exception;
 	UpdateProductCategoryRes updateProdcutCategory(Long id, String name);
+	DeleteProductCategoryRes deleteProductCategory(Long id);
 }

@@ -54,7 +54,7 @@ public class ProductCategory {
 	@OneToMany(mappedBy = "rootCategory", cascade = CascadeType.REMOVE)
 	private List<ProductCategory> subCategory = new ArrayList<>();
 	
-	public void editName(String name) {
+	public void updateName(String name) {
         this.name = name;
     }
 }

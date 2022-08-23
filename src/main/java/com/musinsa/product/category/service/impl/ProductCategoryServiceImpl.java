@@ -4,6 +4,7 @@ import com.musinsa.product.category.dao.ProductCategoryRepository;
 import com.musinsa.product.category.dto.AddProductCategoryReq;
 import com.musinsa.product.category.dto.AddProductCategoryRes;
 import com.musinsa.product.category.dto.AllProductCategoryListRes;
+import com.musinsa.product.category.dto.DeleteProductCategoryRes;
 import com.musinsa.product.category.dto.OneProductCategoryListRes;
 import com.musinsa.product.category.dto.UpdateProductCategoryRes;
 import com.musinsa.product.category.entity.ProductCategory;
@@ -39,7 +40,7 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
 	private final ProductCategoryRepository productCategoryRepository;
 	
 	/**
-	 * @apiNote 상품 카테고리 전체 조회 서비스
+	 * @apiNote 상품 전체 카테고리 전체 조회 서비스
 	 */
 	@Transactional(readOnly = true)
 	public AllProductCategoryListRes findAllProductCategoryList() throws Exception{
@@ -54,6 +55,9 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
         return new AllProductCategoryListRes(categoryList);
 	}
 	
+	/**
+	 * @apiNote 상품 특정 카테고리 조회 서비스
+	 */
 	@Transactional(readOnly = true)
 	public AllProductCategoryListRes findOneProductCategoryList(Long id) throws Exception{
 		
@@ -68,13 +72,16 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
         return new AllProductCategoryListRes(categoryList);
 	}
 	
+	/**
+	 * @apiNote 상품 카테고리 등록 서비스
+	 */
 	@Transactional
 	public AddProductCategoryRes addProdcutCategory(AddProductCategoryReq request) throws Exception{
 		
         categoryExistsByName(request.getName());
         if (request.getRootId() == null) { //상위 카테고리 등록
-            ProductCategory saved = productCategoryRepository.save(new ProductCategory(request.getName()));
-            return AddProductCategoryRes.from(saved);
+            ProductCategory saveCategory = productCategoryRepository.save(new ProductCategory(request.getName()));
+            return AddProductCategoryRes.from(saveCategory);
         }
         //하위 카테고리 등록
         ProductCategory rootProductCategory = productCategoryRepository.findById(request.getRootId()).orElseThrow();
@@ -83,12 +90,26 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
 		return AddProductCategoryRes.from(saved);
 	}
 	
+	/**
+	 * @apiNote 상품 카테고리 수정 서비스
+	 */
     @Transactional
     public UpdateProductCategoryRes updateProdcutCategory(Long id, String name) {
         categoryExistsById(id);
-        ProductCategory findCategory = productCategoryRepository.findById(id).orElseThrow();
-        findCategory.editName(name);
-        return UpdateProductCategoryRes.from(findCategory);
+        ProductCategory updateCategory = productCategoryRepository.findById(id).orElseThrow();
+        updateCategory.updateName(name);
+        return UpdateProductCategoryRes.from(updateCategory);
+    }
+    
+    /**
+     * @apiNote 상품 카테고리 삭제 서비스
+     */
+    @Transactional
+    public DeleteProductCategoryRes deleteProductCategory(Long id) {
+        categoryExistsById(id);
+        ProductCategory foundCategory = productCategoryRepository.findById(id).orElseThrow();
+        productCategoryRepository.delete(foundCategory);
+        return DeleteProductCategoryRes.from(foundCategory);
     }
     
     private void categroiesExists(List<ProductCategory> categoryList) {
