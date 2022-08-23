@@ -2,6 +2,7 @@ package com.musinsa.product.category.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
@@ -18,6 +19,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/webjars/**",
             "/h2-console/**"
     };
+    
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers("/h2-console/**", "/swagger-ui.html", "/v2/api-docs");
+    }
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
