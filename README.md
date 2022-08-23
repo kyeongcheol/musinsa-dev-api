@@ -239,14 +239,17 @@
 ## 4. 테스트 방법
 
 ### Junit Test
+- 단위 및 통합 테스트 진행
 - Controller Test : src/test/java/com/musinsa/product/category/controller/test/ProductCategoryControllerTest.java
-  - ProductCategoryControllerTest 선택 > 오른쪽 마우스 클릭 > Junit Test
-- 테스트 결과 : Junit Console 에서 
+- Service Test : src/test/java/com/musinsa/product/category/service/test/ProductCategoryServiceTest.java
+  - 오른쪽 마우스 클릭 > Junit Test
+- 테스트 결과 : Junit Console 에서 확인 가능
   
 ### Gradle Test
-- Controller Test : src/test/java/com/musinsa/product/category/controller/test/ProductCategoryControllerTest.java
-  - ProductCategoryControllerTest 선택 > 오른쪽 마우스 클릭 > Gradle Test
 - 단위 및 통합 테스트 진행
+- Controller Test : src/test/java/com/musinsa/product/category/controller/test/ProductCategoryControllerTest.java
+- Service Test : src/test/java/com/musinsa/product/category/service/test/ProductCategoryServiceTest.java
+  - 오른쪽 마우스 클릭 > Gradle Test
 - 테스트 결과 : musinsa-dev-api\build\reports\tests\test\index.html
   - index.html 을 실행하면 Gradle Test 결과를 UI로 확인 가능
 
