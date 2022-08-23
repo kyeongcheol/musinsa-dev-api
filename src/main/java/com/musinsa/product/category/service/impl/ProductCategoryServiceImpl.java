@@ -8,7 +8,7 @@ import com.musinsa.product.category.dto.DeleteProductCategoryRes;
 import com.musinsa.product.category.dto.OneProductCategoryListRes;
 import com.musinsa.product.category.dto.UpdateProductCategoryRes;
 import com.musinsa.product.category.entity.ProductCategory;
-import com.musinsa.product.category.exception.AlreadyExistException;
+import com.musinsa.product.category.exception.DuplicateException;
 import com.musinsa.product.category.exception.NotFoundException;
 import com.musinsa.product.category.service.ProductCategoryService;
 
@@ -151,7 +151,7 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
     private void categoryExistsByName(String name) {
         Optional<ProductCategory> findCategory = productCategoryRepository.findByName(name);
         if (findCategory.isPresent()) {
-            throw new AlreadyExistException();
+            throw new DuplicateException();
 		}
 	}
 }
